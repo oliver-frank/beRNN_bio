@@ -1,0 +1,14 @@
+name: dti_env
+channels:
+  - conda-forge
+dependencies:
+  - python=3.9
+  - dipy>=1.7
+  - nibabel
+  - h5py
+  - numpy
+  - scipy
+  - scikit-learn
+  - matplotlib
+  - pandas
+  - jupyter

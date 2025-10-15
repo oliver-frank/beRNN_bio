@@ -25,7 +25,7 @@ n_rois = 200
 tasks = ['faces', 'flanker', 'nback', 'rest', 'reward'] #  is for 03 MRI not working, let's wait for preprocessing 04 if same failure occurs
 data_dir = 'C:\\Users\\oliver.frank\\Desktop\\BackUp\\bio_BeRNN'
 directory = 'W:\\group_csp\\analyses\\oliver.frank\\brainModels'
-threshold = 0.2  # threshold defining sparsity in created graph
+threshold = 0.5  # threshold defining sparsity in created graph
 
 # Load average_correlationMatrixList
 def apply_threshold(matrix, threshold):
@@ -211,114 +211,116 @@ for participant in participants: # one participant after the other
             print(f"Network measures saved to: {output_file}")
 
 
-########################################################################################################################
-# Analysis of Topological Marker change over time
-########################################################################################################################
-# Load several dictionaries, sort them in a df and compare them statstically
-metricsPath = "W:\\group_csp\\analyses\\oliver.frank\\brainModels\\topologicalMarkers\\SCHAEFER" # fix: Several metricsPath needed
-metricsDirectoryList_all = os.listdir(metricsPath)
 
-participants = ['SNIP96WID'] # , 'SNIPKPB84', 'SNIPYL4AS' 'SNIP6IECX', 'SNIP96WID'
-participants_beRNN = ['BeRNN_05'] # 'BeRNN_03', ,
-# recordingsList = ['01', '02', '03', '04', '05']
-recordingsList = ['04']
+# ########################################################################################################################
+# # Analysis of Topological Marker change over time
+# ########################################################################################################################
+# # Load several dictionaries, sort them in a df and compare them statstically
+# metricsPath = "W:\\group_csp\\analyses\\oliver.frank\\brainModels\\topologicalMarkers\\SCHAEFER" # fix: Several metricsPath needed
+# metricsDirectoryList_all = os.listdir(metricsPath)
+#
+# participants = ['SNIP96WID'] # , 'SNIPKPB84', 'SNIPYL4AS' 'SNIP6IECX', 'SNIP96WID'
+# participants_beRNN = ['BeRNN_05'] # 'BeRNN_03', ,
+# # recordingsList = ['01', '02', '03', '04', '05']
+# recordingsList = ['04']
+#
+# for number_beRNN, participant in enumerate(participants):
+#     metricsList = []
+#     for i in recordingsList:
+#         metrics = np.load(os.path.join(metricsPath, 'sub-'+participant+i, f'threshold_{threshold}', f'topologicalMarkers_SCHAEFER_sub-{participant+i}_threshold_{threshold}.npy'), allow_pickle=True).item()
+#         metricsList.append(metrics)
+#
+#     df = pd.DataFrame(metricsList)
+#
+#     # Define time points
+#     time = [1, 2, 3, 4]
+#
+#     # Create a plot with subplots for each metric between columns 3 and 11
+#     fig, axes = plt.subplots(nrows=3, ncols=3, figsize=(15, 10))  # Adjust grid based on number of metrics
+#     fig.suptitle(f'Linear Regression for each metric over time - {participants_beRNN[number_beRNN]}', fontsize=16)
+#
+#     # Flatten axes array for easier indexing
+#     axes = axes.flatten()
+#
+#     # Loop through each metric column (3 to 11)
+#     for idx, col in enumerate(range(3, 11)):  # Adjust range as needed
+#         values = df.iloc[:, col]
+#
+#         # Perform linear regression
+#         slope, intercept, r_value, p_value, std_err = linregress(time, values)
+#         regression_line = [slope * t + intercept for t in time]
+#
+#         # Plot data points and regression line on the respective subplot
+#         axes[idx].scatter(time, values, color='blue', label='Data Points')
+#         axes[idx].plot(time, regression_line, color='red', label=f'Regression Line (slope={slope:.2f})')
+#         axes[idx].set_title(f'Metric: {df.columns[col]}')
+#         axes[idx].set_xlabel('Time')
+#         axes[idx].set_ylabel('Value')
+#         axes[idx].legend()
+#
+#     # Adjust layout and show plot
+#     plt.tight_layout(rect=[0, 0, 1, 0.96])  # Rect option to fit main title
+#
+#     figure_directory = f'W:\\group_csp\\analyses\\oliver.frank\\brainModels\\topologicalMarkers\\SCHAEFER\\trends\\{threshold}'
+#     if not os.path.exists(figure_directory):
+#         os.makedirs(figure_directory)
+#
+#     plt.savefig(os.path.join(figure_directory, f'topologicalMarkerTrends_{participants_beRNN[number_beRNN]}.png'), format='png', dpi=300, bbox_inches='tight')
+#
+#     plt.show()
+#     plt.close()
 
-for number_beRNN, participant in enumerate(participants):
-    metricsList = []
-    for i in recordingsList:
-        metrics = np.load(os.path.join(metricsPath, 'sub-'+participant+i, f'threshold_{threshold}', f'topologicalMarkers_SCHAEFER_sub-{participant+i}_threshold_{threshold}.npy'), allow_pickle=True).item()
-        metricsList.append(metrics)
-
-    df = pd.DataFrame(metricsList)
-
-    # Define time points
-    time = [1, 2, 3, 4]
-
-    # Create a plot with subplots for each metric between columns 3 and 11
-    fig, axes = plt.subplots(nrows=3, ncols=3, figsize=(15, 10))  # Adjust grid based on number of metrics
-    fig.suptitle(f'Linear Regression for each metric over time - {participants_beRNN[number_beRNN]}', fontsize=16)
-
-    # Flatten axes array for easier indexing
-    axes = axes.flatten()
-
-    # Loop through each metric column (3 to 11)
-    for idx, col in enumerate(range(3, 11)):  # Adjust range as needed
-        values = df.iloc[:, col]
-
-        # Perform linear regression
-        slope, intercept, r_value, p_value, std_err = linregress(time, values)
-        regression_line = [slope * t + intercept for t in time]
-
-        # Plot data points and regression line on the respective subplot
-        axes[idx].scatter(time, values, color='blue', label='Data Points')
-        axes[idx].plot(time, regression_line, color='red', label=f'Regression Line (slope={slope:.2f})')
-        axes[idx].set_title(f'Metric: {df.columns[col]}')
-        axes[idx].set_xlabel('Time')
-        axes[idx].set_ylabel('Value')
-        axes[idx].legend()
-
-    # Adjust layout and show plot
-    plt.tight_layout(rect=[0, 0, 1, 0.96])  # Rect option to fit main title
-
-    figure_directory = f'W:\\group_csp\\analyses\\oliver.frank\\brainModels\\topologicalMarkers\\SCHAEFER\\trends\\{threshold}'
-    if not os.path.exists(figure_directory):
-        os.makedirs(figure_directory)
-
-    plt.savefig(os.path.join(figure_directory, f'topologicalMarkerTrends_{participants_beRNN[number_beRNN]}.png'), format='png', dpi=300, bbox_inches='tight')
-
-    plt.show()
-    plt.close()
 
 
-########################################################################################################################
-# Correlation Matrices - only with Brain regions involved in tasks
-########################################################################################################################
-# Functional correlation matrices - Pearson Correlation
-import numpy as np
-import matplotlib.pyplot as plt
-import itertools
-from scipy.stats import pearsonr
-
-for participant in participants:
-    mode = '200' # info: filtered_rois, 200, 400, ' '
-    # File paths
-    files = [
-        # f"W:\\group_csp\\analyses\\oliver.frank\\brainModels\\sub-{participant}01\\func\\npy_corrMatrices_SCHAEFER_{mode}_sub-{participant}01\\sub-{participant}01_averagedTask - {mode}.npy",
-        # f"W:\\group_csp\\analyses\\oliver.frank\\brainModels\\sub-{participant}02\\func\\npy_corrMatrices_SCHAEFER_{mode}_sub-{participant}02\\sub-{participant}02_averagedTask - {mode}.npy",
-        # f"W:\\group_csp\\analyses\\oliver.frank\\brainModels\\sub-{participant}03\\func\\npy_corrMatrices_SCHAEFER_{mode}_sub-{participant}03\\sub-{participant}03_averagedTask - {mode}.npy",
-        f"W:\\group_csp\\analyses\\oliver.frank\\brainModels\\sub-{participant}04\\func\\npy_corrMatrices_SCHAEFER_{mode}_sub-{participant}04\\sub-{participant}04_averagedTask - {mode}.npy",
-        # f"W:\\group_csp\\analyses\\oliver.frank\\brainModels\\sub-{participant}05\\func\\npy_corrMatrices_SCHAEFER_{mode}_sub-{participant}05\\sub-{participant}05_averagedTask - {mode}.npy"
-    ]
-
-    # Load matrices
-    matrices = [np.load(file) for file in files]
-
-    # Function to extract the upper triangle (excluding the diagonal)
-    def upper_triangle(matrix):
-        return matrix[np.triu_indices_from(matrix, k=1)]
-
-    # Extract the upper triangles of all matrices
-    flattened_matrices = [upper_triangle(mat) for mat in matrices]
-
-    # Calculate pairwise correlations
-    pairwise_correlations = {}
-    for (i, vec1), (j, vec2) in itertools.combinations(enumerate(flattened_matrices), 2):
-        corr, _ = pearsonr(vec1, vec2)  # Pearson correlation
-        pairwise_correlations[f"{files[i]} vs {files[j]}"] = corr
-
-    # Display pairwise correlations
-    print("Pairwise Correlation of Correlations:")
-    for pair, corr in pairwise_correlations.items():
-        print(f"{pair}: Correlation = {corr:.4f}")
-
-    # Visualize correlation matrices
-    for i, matrix in enumerate(matrices):
-        plt.figure()
-        plt.imshow(matrix, cmap="coolwarm", vmin=-1, vmax=1)
-        plt.colorbar(label="Correlation")
-        plt.title(f"Correlation Matrix: {files[i]}")
-        plt.xlabel("Region")
-        plt.ylabel("Region")
-        plt.show()
+# ########################################################################################################################
+# # Correlation Matrices of Correlation Matrices
+# ########################################################################################################################
+# # Functional correlation matrices - Pearson Correlation
+# import numpy as np
+# import matplotlib.pyplot as plt
+# import itertools
+# from scipy.stats import pearsonr
+#
+# for participant in participants:
+#     mode = '200' # info: filtered_rois, 200, 400, ' '
+#     # File paths
+#     files = [
+#         # f"W:\\group_csp\\analyses\\oliver.frank\\brainModels\\sub-{participant}01\\func\\npy_corrMatrices_SCHAEFER_{mode}_sub-{participant}01\\sub-{participant}01_averagedTask - {mode}.npy",
+#         # f"W:\\group_csp\\analyses\\oliver.frank\\brainModels\\sub-{participant}02\\func\\npy_corrMatrices_SCHAEFER_{mode}_sub-{participant}02\\sub-{participant}02_averagedTask - {mode}.npy",
+#         # f"W:\\group_csp\\analyses\\oliver.frank\\brainModels\\sub-{participant}03\\func\\npy_corrMatrices_SCHAEFER_{mode}_sub-{participant}03\\sub-{participant}03_averagedTask - {mode}.npy",
+#         f"W:\\group_csp\\analyses\\oliver.frank\\brainModels\\sub-{participant}04\\func\\npy_corrMatrices_SCHAEFER_{mode}_sub-{participant}04\\sub-{participant}04_averagedTask - {mode}.npy",
+#         # f"W:\\group_csp\\analyses\\oliver.frank\\brainModels\\sub-{participant}05\\func\\npy_corrMatrices_SCHAEFER_{mode}_sub-{participant}05\\sub-{participant}05_averagedTask - {mode}.npy"
+#     ]
+#
+#     # Load matrices
+#     matrices = [np.load(file) for file in files]
+#
+#     # Function to extract the upper triangle (excluding the diagonal)
+#     def upper_triangle(matrix):
+#         return matrix[np.triu_indices_from(matrix, k=1)]
+#
+#     # Extract the upper triangles of all matrices
+#     flattened_matrices = [upper_triangle(mat) for mat in matrices]
+#
+#     # Calculate pairwise correlations
+#     pairwise_correlations = {}
+#     for (i, vec1), (j, vec2) in itertools.combinations(enumerate(flattened_matrices), 2):
+#         corr, _ = pearsonr(vec1, vec2)  # Pearson correlation
+#         pairwise_correlations[f"{files[i]} vs {files[j]}"] = corr
+#
+#     # Display pairwise correlations
+#     print("Pairwise Correlation of Correlations:")
+#     for pair, corr in pairwise_correlations.items():
+#         print(f"{pair}: Correlation = {corr:.4f}")
+#
+#     # Visualize correlation matrices
+#     for i, matrix in enumerate(matrices):
+#         plt.figure()
+#         plt.imshow(matrix, cmap="coolwarm", vmin=-1, vmax=1)
+#         plt.colorbar(label="Correlation")
+#         plt.title(f"Correlation Matrix: {files[i]}")
+#         plt.xlabel("Region")
+#         plt.ylabel("Region")
+#         plt.show()
 
 
